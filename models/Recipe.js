@@ -6,7 +6,8 @@ const RecipeSchema = new mongoose.Schema({
     ingredients: Array,
     quantities: Array,
     chefNames: Array,
-    recipeLocation: String 
+    recipeLocation: String,
+    lastCooked: Date, 
 });
 
 module.exports = mongoose.model('Recipe', RecipeSchema);
