@@ -66,7 +66,45 @@ const getSingleRecipe = async (req, res) => {
 
 };
 
+const addRecipe = async (req, res) => {
+
+    try {
+
+        const data = req.body;
+
+        if(!data) {
+            res.status(404).json({
+                success: false,
+                message: 'No recipe data provided'
+            });
+        };
+
+        const newRecipe = await Recipe.create(data);
+
+        if(!newRecipe) {
+            res.status(500).json({
+                success: false,
+                message: 'New recipe could not be created'
+            });
+        };
+
+        res.status(201).json({
+            success: true,
+            message: 'New recipe added successfully',
+            data: newRecipe
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal error! Please try again'
+        });
+    };
+};
+
 module.exports = {
     getAllRecipes,
     getSingleRecipe,
+    addRecipe,
 };
