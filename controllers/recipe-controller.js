@@ -84,9 +84,18 @@ const addRecipe = async (req, res) => {
         if(!newRecipe) {
             res.status(500).json({
                 success: false,
-                message: 'New recipe could not be created'
+                message: 'New recipe could not be created - please try again'
             });
         };
+
+        if(newRecipe.errors) {
+            res.status(422).json({
+                success: false,
+                message: 'New recipe could not be created - please fix validation errors',
+                errors: newRecipe.errors,
+            });
+            console.log(newRecipe.errors);
+        };       
 
         res.status(201).json({
             success: true,
