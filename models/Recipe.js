@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const RecipeSchema = new mongoose.Schema({
     name: {
         type: String,
+        trim: true,
         required: [true, 'Please provide a name for this recipe'],
-        minLength: [1, 'Recipe name too short! Must be longer than 1 character'],
+        minLength: [2, 'Recipe name too short! Must be longer than 1 character'],
         maxLength: [50, 'Recipe name too long! Must be shorter than 50 characters']
     },       
     portions: Number,

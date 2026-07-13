@@ -112,8 +112,56 @@ const addRecipe = async (req, res) => {
     };
 };
 
+const updateRecipe = async (req, res) => {
+
+    try {
+
+        const getRecipeId = req.params.id;
+        const updatedRecipeData = req.body;
+
+        if(!updatedRecipeData) {
+            return res.status(400).json({
+                success: false,
+                message: 'No data sent - nothing to update!'
+            });
+        };
+
+        const updatedRecipe = await Recipe.findByIdAndUpdate(getRecipeId, updatedRecipeData, { returnDocument: 'after', runValidators: true});
+
+        if(!updatedRecipe) {
+            return res.status(500).json({
+                success: false,
+                message: 'Recipe could not be updated - please try again'
+            });
+        };
+
+        if(updatedRecipe.errors) {
+            res.status(422).json({
+                success: false,
+                message: 'Recipe could not be updated - please fix validation errors',
+                errors: updatedRecipe.errors
+            });
+            console.log(updatedRecipe.errors);
+        };
+
+        res.status(201).json({
+            success: true,
+            message: 'Recipe updated successfully',
+            data: updatedRecipe
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal error! Please try again'
+        });
+    }
+}
+
 module.exports = {
     getAllRecipes,
     getSingleRecipe,
     addRecipe,
+    updateRecipe,
 };
