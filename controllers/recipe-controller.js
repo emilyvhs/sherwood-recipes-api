@@ -91,7 +91,7 @@ const addRecipe = async (req, res) => {
     } catch(error) {
 
         if (error instanceof mongoose.Error.ValidationError) {
-            console.log(error);
+            console.log(error.errors);
             res.status(400).json({
                 success: false,
                 message: 'New recipe could not be created - please fix validation errors',
@@ -143,9 +143,38 @@ const updateRecipe = async (req, res) => {
     };
 };
 
+const deleteRecipe = async (req, res) => {
+
+    try {
+        const getRecipeId = req.params.id;
+        const deletedRecipe = await Recipe.findByIdAndDelete(getRecipeId);
+
+        if(!deletedRecipe) {
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not found!'
+            });
+        };
+
+        res.status(200).json({
+            success: true,
+            message: 'Recipe deleted',
+            data: deletedRecipe
+        });   
+
+    } catch(error) {        
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal error! Please try again'
+        });
+    };
+};
+
 module.exports = {
     getAllRecipes,
     getSingleRecipe,
     addRecipe,
     updateRecipe,
+    deleteRecipe,
 };

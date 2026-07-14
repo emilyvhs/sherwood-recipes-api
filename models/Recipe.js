@@ -20,7 +20,7 @@ const RecipeSchema = new mongoose.Schema({
         type: Array,
         validate: {
             validator: v => Array.isArray(v) && v.length > 0,
-            message: 'Please provide at least one chef who can cook this recipe'
+            message: 'Please select at least one chef who can cook this recipe'
         }
     },
     recipeLocation: String,
