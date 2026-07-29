@@ -28,6 +28,6 @@ const RecipeSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Please provide the date that you most recently cooked this recipe']
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Recipe', RecipeSchema);
