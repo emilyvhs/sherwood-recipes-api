@@ -49,6 +49,52 @@ const registerUser = async (req, res) => {
     };
 };
 
+const loginUser = async (req, res) => {
+
+    try {
+
+        const { email, password } = req.body;
+        const user = await User.findOne({email});
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found - please register a new user instead'
+            });
+        };
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials - please check your email and password is correct and try again'
+            });
+        };
+
+        const accessToken = jsonwebtoken.sign({
+            id: user._id,
+            username: user.username
+        }, process.env.JWT_SECRET_KEY, {
+            expiresIn: '60m'
+        });
+
+        res.status(200).json({
+            success : true,
+            message : 'User logged in successfully',
+            accessToken
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            success : false,
+            message : 'Internal error! Please try again'
+        });
+    };
+};
+
 module.eports = {
     registerUser,
+    loginUser,
 };
