@@ -94,7 +94,7 @@ const loginUser = async (req, res) => {
     };
 };
 
-module.eports = {
+module.exports = {
     registerUser,
     loginUser,
 };
