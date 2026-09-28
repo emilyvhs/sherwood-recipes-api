@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jsonwebtoken = require('jsonwebtoken');
+const { default: mongoose } = require('mongoose');
 
 const registerUser = async (req, res) => {
 
@@ -13,7 +14,16 @@ const registerUser = async (req, res) => {
         if (userExists) {
             return res.status(400).json({
                 success: false,
-                message: 'User already exists - please log in instead!'
+                message: 'User already exists - please log in instead!',
+                userExistsError: true
+            });
+        };
+
+        if (password.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password too short! Must be at least 8 characters',
+                passwordLengthError: true
             });
         };
 
@@ -41,11 +51,22 @@ const registerUser = async (req, res) => {
         };
 
     } catch(error) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal error! Please try again'
-        });
+
+        if (error instanceof mongoose.Error.ValidationError) {
+            console.log(error.errors);
+            res.status(400).json({
+                success: false,
+                message: 'New user could not be registered - please fix validation errors',
+                errors: error.errors
+            });
+
+        } else {
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: 'Internal error! Please try again'
+            });
+        }
     };
 };
 
