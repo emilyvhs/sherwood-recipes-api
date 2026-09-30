@@ -80,7 +80,8 @@ const loginUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: 'User not found - please register a new user instead'
+                message: 'User not found - please register a new user instead',
+                userExistsError: true
             });
         };
 
@@ -89,7 +90,8 @@ const loginUser = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({
                 success: false,
-                message: 'Invalid credentials - please check your email and password is correct and try again'
+                message: 'Invalid credentials - please check your email and password is correct and try again',
+                passwordMatchError: true
             });
         };
 
