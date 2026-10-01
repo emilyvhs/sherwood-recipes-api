@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const jsonwebtoken = require('jsonwebtoken');
 const { default: mongoose } = require('mongoose');
 
 const registerUser = async (req, res) => {
@@ -95,17 +94,10 @@ const loginUser = async (req, res) => {
             });
         };
 
-        const accessToken = jsonwebtoken.sign({
-            id: user._id,
-            username: user.username
-        }, process.env.JWT_SECRET_KEY, {
-            expiresIn: '60m'
-        });
-
         res.status(200).json({
             success : true,
-            message : 'User logged in successfully',
-            accessToken
+            message : 'User logged in successfully',    
+            id: user._id
         });
 
     } catch(error) {
