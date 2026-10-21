@@ -171,10 +171,47 @@ const deleteRecipe = async (req, res) => {
     };
 };
 
+const getRecipesByUser = async (req, res) => {
+
+    try {
+
+        const getUserId = req.params.userId;
+        const recipes = await Recipe.find({userId: getUserId});
+
+        if (!recipes) {
+            return res.status(404).json({
+                success: false,
+                message: 'Error retrieving recipes from database'
+            });
+        };
+
+        if (recipes.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No recipes found'
+            });
+        };
+
+        res.status(200).json({
+            success: true,
+            message: "User's recipes retrieved successfully",
+            data: recipes
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal error! Please try again'
+        });
+    };
+};
+
 module.exports = {
     getAllRecipes,
     getSingleRecipe,
     addRecipe,
     updateRecipe,
     deleteRecipe,
+    getRecipesByUser,
 };
